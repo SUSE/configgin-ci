@@ -1,0 +1,56 @@
+groups: []
+resources:
+- name: src
+  type: git
+  source:
+    uri: git@github.com:hpcloud/hcf-configgin.git
+    branch: develop
+    private_key: {{git-private-key}}
+- name: src-ci
+  type: git
+  source:
+    uri: git@github.com:hpcloud/hcf-configgin-ci.git
+    branch: develop
+    private_key: {{git-private-key}}
+- name: 'swift (concourse-testing)'
+  type: fog
+  source:
+    connection:
+      hp_access_key: {{swift-access-key}}
+      hp_auth_uri: https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/
+      hp_avl_zone: region-a.geo-1
+      hp_secret_key: {{swift-secret-key}}
+      hp_tenant_id: {{swift-tenant-id}}
+      provider: HP
+    directory: concourse-testing
+    regexp: 'configgin-(.*)\.tgz'
+jobs:
+- name: lint
+  plan:
+  - get: src-ci
+    trigger: true
+  - get: src
+    trigger: true
+  - task: lint
+    file: src-ci/jobs/lint.yaml
+- name: test
+  plan:
+  - get: src
+    trigger: true
+  - get: src-ci
+    trigger: true
+  - task: test
+    file: src-ci/jobs/test.yaml
+- name: dist
+  plan:
+  - get: src
+    passed: [lint, test]
+    trigger: true
+  - get: src-ci
+    passed: [lint, test]
+    trigger: true
+  - task: dist
+    file: src-ci/jobs/dist.yaml
+  - put: 'swift (concourse-testing)'
+    params:
+      file: dist/configgin-*.tgz

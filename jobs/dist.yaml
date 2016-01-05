@@ -1,0 +1,17 @@
+---
+platform: linux
+image: 'docker:///ruby#2.1.5'
+
+inputs:
+  - name: src
+
+outputs:
+  - name: dist
+    path: src/output
+
+run:
+  path: make
+  args:
+    - -C
+    - src
+    - dist
