@@ -15,8 +15,9 @@ To set-pipeline, you must supply your own values for the following:
 
 You can simply `mv secrets.yml.example secrets.yml` and fill in the blanks.
 
-Then do a set-pipeline like this:
+Then (assuming your instance is called "lol") do a set-pipeline like this:
 
 ```bash
 fly -t lol set-pipeline -p configgin-develop -c configgin-develop.yaml -l secrets.yaml
+fly -t lol set-pipeline -p configgin-master -c configgin-master.yaml -l secrets.yaml
 ```
