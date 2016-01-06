@@ -27,28 +27,31 @@ resources:
 jobs:
 - name: lint
   plan:
-  - get: src-ci
-    trigger: true
-  - get: src
-    trigger: true
+  - aggregate:
+    - get: src-ci
+      trigger: true
+    - get: src
+      trigger: true
   - task: lint
     file: src-ci/jobs/lint.yaml
 - name: test
   plan:
-  - get: src
-    trigger: true
-  - get: src-ci
-    trigger: true
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
   - task: test
     file: src-ci/jobs/test.yaml
 - name: dist
   plan:
-  - get: src
-    passed: [lint, test]
-    trigger: true
-  - get: src-ci
-    passed: [lint, test]
-    trigger: true
+  - aggregate:
+    - get: src
+      passed: [lint, test]
+      trigger: true
+    - get: src-ci
+      passed: [lint, test]
+      trigger: true
   - task: dist
     file: src-ci/jobs/dist.yaml
   - put: 'swift (concourse-testing)'
