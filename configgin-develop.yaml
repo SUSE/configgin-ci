@@ -33,7 +33,7 @@ jobs:
     - get: src
       trigger: true
   - task: lint
-    file: src-ci/jobs/lint.yaml
+    file: src-ci/tasks/lint.yaml
 - name: test
   plan:
   - aggregate:
@@ -42,7 +42,7 @@ jobs:
     - get: src-ci
       trigger: true
   - task: test
-    file: src-ci/jobs/test.yaml
+    file: src-ci/tasks/test.yaml
 - name: dist
   plan:
   - aggregate:
@@ -53,7 +53,7 @@ jobs:
       passed: [lint, test]
       trigger: true
   - task: dist
-    file: src-ci/jobs/dist.yaml
+    file: src-ci/tasks/dist.yaml
   - put: 'swift (concourse-testing)'
     params:
       file: dist/configgin-*.tgz
