@@ -1,4 +1,3 @@
-groups: []
 resources:
 - name: src
   type: git
