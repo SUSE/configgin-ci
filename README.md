@@ -13,7 +13,7 @@ To set-pipeline, you must supply your own values for the following:
 - swift-tenant-id
 - git-private-key
 
-You can simply `mv secrets.yml.example secrets.yml` and fill in the blanks.
+You can simply `cp secrets.yaml.example secrets.yaml` and fill in the blanks.
 
 Then (assuming your instance is called "lol") do a set-pipeline like this:
 
