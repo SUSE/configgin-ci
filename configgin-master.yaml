@@ -11,7 +11,7 @@ resources:
     uri: git@github.com:hpcloud/hcf-configgin-ci.git
     branch: develop
     private_key: {{git-private-key}}
-- name: 'swift (concourse-testing)'
+- name: swift.hcf-ci-concourse
   type: fog
   source:
     connection:
@@ -21,7 +21,7 @@ resources:
       hp_secret_key: {{swift-secret-key}}
       hp_tenant_id: {{swift-tenant-id}}
       provider: HP
-    directory: concourse-testing
+    directory: hcf-ci-concourse
     regexp: 'configgin-(.*)\.tgz'
 jobs:
 - name: lint
@@ -53,6 +53,6 @@ jobs:
       trigger: true
   - task: dist
     file: src-ci/tasks/dist.yaml
-  - put: 'swift (concourse-testing)'
+  - put: swift.hcf-ci-concourse
     params:
       file: dist/configgin-*.tgz
