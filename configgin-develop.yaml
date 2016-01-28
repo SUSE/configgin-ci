@@ -17,7 +17,7 @@ resources:
     connection:
       hp_access_key: {{swift-access-key}}
       hp_auth_uri: https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/
-      hp_avl_zone: region-a.geo-1
+      hp_avl_zone: region-b.geo-1
       hp_secret_key: {{swift-secret-key}}
       hp_tenant_id: {{swift-tenant-id}}
       provider: HP
