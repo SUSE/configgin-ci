@@ -8,10 +8,10 @@ Exposes the make targets:
 - dist
 
 To set-pipeline, you must supply your own values for the following:
-- swift-access-key
-- swift-secret-key
-- swift-tenant-id
-- git-private-key
+- `swift-access-key`
+- `swift-secret-key`
+- `swift-tenant-id`
+- `git-private-key`
 
 You can simply `cp secrets.yaml.example secrets.yaml` and fill in the blanks.
 
