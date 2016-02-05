@@ -7,11 +7,9 @@ inputs:
 
 outputs:
   - name: dist
-    path: src/output
 
 run:
-  path: make
+  path: sh
   args:
-    - -C
-    - src
-    - dist
+    - -c
+    - make -C src dist && mv src/output/* dist/
