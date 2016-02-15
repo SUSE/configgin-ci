@@ -7,12 +7,7 @@ Exposes the make targets:
 - test
 - dist
 
-To set-pipeline, you must supply your own values for the following:
-- `swift-access-key`
-- `swift-secret-key`
-- `swift-tenant-id`
-- `git-private-key`
-
+To set-pipeline, you must supply your own secrets.yaml.
 You can simply `cp secrets.yaml.example secrets.yaml` and fill in the blanks.
 
 Then (assuming your instance is called "lol") do a set-pipeline like this:

@@ -11,18 +11,17 @@ resources:
     uri: git@github.com:hpcloud/hcf-configgin-ci.git
     branch: develop
     private_key: {{git-private-key}}
-- name: swift.hcf-ci-concourse
-  type: fog
+- name: swift.hcf-ci-concourse-configgin
+  type: swift
   source:
-    connection:
-      hp_access_key: {{swift-access-key}}
-      hp_auth_uri: https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/
-      hp_avl_zone: region-b.geo-1
-      hp_secret_key: {{swift-secret-key}}
-      hp_tenant_id: {{swift-tenant-id}}
-      provider: HP
-    directory: hcf-ci-concourse
-    regexp: 'configgin-(.*)\.tgz'
+    auth_url: {{swift-auth-url}}
+    username: {{swift-access-key}}
+    api_key: {{swift-secret-key}}
+    domain: {{swift-domain}}
+    tenant_id: {{swift-tenant-id}}
+    container: hcf-ci-concourse-configgin
+    regex: 'configgin-(.*)\.tgz'
+    disable_tls_verify: true
 jobs:
 - name: lint
   plan:
@@ -53,6 +52,6 @@ jobs:
       trigger: true
   - task: dist
     file: src-ci/tasks/dist.yaml
-  - put: swift.hcf-ci-concourse
+  - put: swift.hcf-ci-concourse-configgin
     params:
-      file: dist/configgin-*.tgz
+      from: 'dist/configgin-(.*)\.tgz'
