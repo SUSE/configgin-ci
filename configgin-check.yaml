@@ -1,0 +1,122 @@
+resources:
+- name: src
+  type: pull-request
+  source:
+    uri: git@github.com:hpcloud/hcf-configgin.git
+    branch: develop
+    access_token: {{github-access-token}}
+    private_key: {{git-private-key}}
+- name: src-ci
+  type: git
+  source:
+    uri: git@github.com:hpcloud/hcf-configgin-ci.git
+    branch: develop
+    private_key: {{git-private-key}}
+jobs:
+- name: lint
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - task: set-status-pending
+    file: src-ci/tasks/status.yaml
+    config:
+      run:
+        path: src-ci/scripts/set-status.sh
+        args: [lint, pending, 'make lint']
+      params:
+        GITHUB_ACCESS_TOKEN: {{github-access-token}}
+  - task: lint
+    file: src-ci/tasks/lint.yaml
+    on_success:
+      task: set-status-success
+      file: src-ci/tasks/status.yaml
+      config:
+        run:
+          path: src-ci/scripts/set-status.sh
+          args: [lint, success, 'make lint']
+        params:
+          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+    on_failure:
+      task: set-status-failed
+      file: src-ci/tasks/status.yaml
+      config:
+        run:
+          path: src-ci/scripts/set-status.sh
+          args: [lint, failure, 'make lint']
+        params:
+          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+- name: test
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - task: set-status-pending
+    file: src-ci/tasks/status.yaml
+    config:
+      run:
+        path: src-ci/scripts/set-status.sh
+        args: [test, pending, 'make test']
+      params:
+        GITHUB_ACCESS_TOKEN: {{github-access-token}}
+  - task: test
+    file: src-ci/tasks/test.yaml
+    on_success:
+      task: set-status-success
+      file: src-ci/tasks/status.yaml
+      config:
+        run:
+          path: src-ci/scripts/set-status.sh
+          args: [test, success, 'make test']
+        params:
+          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+    on_failure:
+      task: set-status-failed
+      file: src-ci/tasks/status.yaml
+      config:
+        run:
+          path: src-ci/scripts/set-status.sh
+          args: [test, failure, 'make test']
+        params:
+          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+- name: dist
+  plan:
+  - aggregate:
+    # Don't use the passed: attribute from the normal pipeline, there is no true
+    # dependency as well as we want all the statuses to be set in parallel.
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - task: set-status-pending
+    file: src-ci/tasks/status.yaml
+    config:
+      run:
+        path: src-ci/scripts/set-status.sh
+        args: [dist, pending, 'packaging']
+      params:
+        GITHUB_ACCESS_TOKEN: {{github-access-token}}
+  - task: dist
+    file: src-ci/tasks/dist.yaml
+    on_success:
+      task: set-status-success
+      file: src-ci/tasks/status.yaml
+      config:
+        run:
+          path: src-ci/scripts/set-status.sh
+          args: [dist, success, 'packaging']
+        params:
+          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+    on_failure:
+      task: set-status-failed
+      file: src-ci/tasks/status.yaml
+      config:
+        run:
+          path: src-ci/scripts/set-status.sh
+          args: [dist, failure, 'packaging']
+        params:
+          GITHUB_ACCESS_TOKEN: {{github-access-token}}
