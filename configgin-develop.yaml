@@ -21,7 +21,6 @@ resources:
     tenant_id: {{swift-tenant-id}}
     container: hcf-ci-concourse-configgin
     regex: 'configgin-(.*)\.tgz'
-    disable_tls_verify: true
 jobs:
 - name: lint
   plan:
