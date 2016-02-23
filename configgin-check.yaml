@@ -12,6 +12,16 @@ resources:
     uri: git@github.com:hpcloud/hcf-configgin-ci.git
     branch: develop
     private_key: {{git-private-key}}
+- name: swift.hcf-ci-concourse-configgin-pr
+  type: swift
+  source:
+    auth_url: {{swift-auth-url}}
+    username: {{swift-access-key}}
+    api_key: {{swift-secret-key}}
+    domain: {{swift-domain}}
+    tenant_id: {{swift-tenant-id}}
+    container: hcf-ci-concourse-configgin-pr
+    regex: 'configgin-(.*)\.tgz'
 jobs:
 - name: lint
   plan:
@@ -120,3 +130,6 @@ jobs:
           args: [dist, failure, 'packaging']
         params:
           GITHUB_ACCESS_TOKEN: {{github-access-token}}
+  - put: swift.hcf-ci-concourse-configgin-pr
+    params:
+      from: 'dist/configgin-(.*)\.tgz'
