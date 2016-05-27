@@ -11,16 +11,15 @@ resources:
     uri: git@github.com:hpcloud/hcf-configgin-ci.git
     branch: develop
     private_key: {{git-private-key}}
-- name: swift.hcf-ci-concourse-configgin
-  type: swift
+- name: s3.hcf-ci-concourse-configgin
+  type: s3
   source:
-    auth_url: {{swift-auth-url}}
-    username: {{swift-access-key}}
-    api_key: {{swift-secret-key}}
-    domain: {{swift-domain}}
-    tenant_id: {{swift-tenant-id}}
-    container: hcf-ci-concourse-configgin
-    regex: 'configgin-(.*)\.tgz'
+    region_name: us-west-2
+    access_key_id: {{aws-access-key-id}}
+    secret_access_key: {{aws-secret-access-key}}
+    bucket: concourse-hpe
+    regexp: 'configgin-(.*)\.tgz'
+    private: true
 jobs:
 - name: lint
   plan:
@@ -51,6 +50,6 @@ jobs:
       trigger: true
   - task: dist
     file: src-ci/tasks/dist.yaml
-  - put: swift.hcf-ci-concourse-configgin
+  - put: s3.hcf-ci-concourse-configgin
     params:
       from: 'dist/configgin-(.*)\.tgz'
