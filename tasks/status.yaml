@@ -4,6 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: colstrom/octokitty
+    tags: with-git
 inputs:
   - name: src # Referenced in the script below
   - name: src-ci
