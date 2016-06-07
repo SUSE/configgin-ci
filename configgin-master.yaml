@@ -53,3 +53,4 @@ jobs:
   - put: s3.hcf-ci-concourse-configgin
     params:
       file: dist/configgin-*.tgz
+      acl: public-read
