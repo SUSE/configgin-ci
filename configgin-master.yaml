@@ -18,7 +18,7 @@ resources:
     access_key_id: {{aws-access-key-id}}
     secret_access_key: {{aws-secret-access-key}}
     bucket: concourse-hpe
-    regexp: 'configgin-(.*)\.tgz'
+    regexp: configgin-(.*).tgz
     private: true
 jobs:
 - name: lint
@@ -52,5 +52,5 @@ jobs:
     file: src-ci/tasks/dist.yaml
   - put: s3.hcf-ci-concourse-configgin
     params:
-      from: dist/configgin-*.tgz
+      file: dist/configgin-*.tgz
       acl: public-read
