@@ -52,5 +52,5 @@ jobs:
     file: src-ci/tasks/dist.yaml
   - put: s3.hcf-ci-concourse-configgin
     params:
-      file: 'dist/configgin-(.*)\.tgz'
+      from: 'dist/configgin-(.*)\.tgz'
       acl: public-read
