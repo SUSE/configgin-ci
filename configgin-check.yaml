@@ -3,6 +3,10 @@ resource_types:
   type: docker-image
   source:
     repository: helioncf/concourse-github-pull-request
+- name: status
+  type: docker-image
+  source:
+    repository: helioncf/concourse-github-status
 resources:
 - name: src
   type: pull-request
@@ -17,6 +21,11 @@ resources:
     uri: git@github.com:hpcloud/hcf-configgin-ci.git
     branch: develop
     private_key: {{git-private-key}}
+- name: status
+  type: status
+  source:
+    repo: hpcloud/configgin
+    access_token: {{github-access-token}}
 - name: s3.hcf-ci-concourse-configgin
   type: s3
   source:
@@ -34,34 +43,28 @@ jobs:
       trigger: true
     - get: src-ci
       trigger: true
-  - task: set-status-pending
-    file: src-ci/tasks/status.yaml
-    config:
-      run:
-        path: src-ci/scripts/set-status.sh
-        args: [lint, pending, 'make lint']
-      params:
-        GITHUB_ACCESS_TOKEN: {{github-access-token}}
+  - put: status
+    params:
+      path: src
+      context: lint
+      state: pending
+      description: make lint
   - task: lint
     file: src-ci/tasks/lint.yaml
     on_success:
-      task: set-status-success
-      file: src-ci/tasks/status.yaml
-      config:
-        run:
-          path: src-ci/scripts/set-status.sh
-          args: [lint, success, 'make lint']
-        params:
-          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+      put: status
+      params:
+        path: src
+        context: lint
+        state: success
+        description: make lint
     on_failure:
-      task: set-status-failed
-      file: src-ci/tasks/status.yaml
-      config:
-        run:
-          path: src-ci/scripts/set-status.sh
-          args: [lint, failure, 'make lint']
-        params:
-          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+      put: status
+      params:
+        path: src
+        context: lint
+        state: failure
+        description: make lint
 - name: test
   plan:
   - aggregate:
@@ -69,34 +72,28 @@ jobs:
       trigger: true
     - get: src-ci
       trigger: true
-  - task: set-status-pending
-    file: src-ci/tasks/status.yaml
-    config:
-      run:
-        path: src-ci/scripts/set-status.sh
-        args: [test, pending, 'make test']
-      params:
-        GITHUB_ACCESS_TOKEN: {{github-access-token}}
+  - put: status
+    params:
+      path: src
+      context: test
+      state: pending
+      description: make test
   - task: test
     file: src-ci/tasks/test.yaml
     on_success:
-      task: set-status-success
-      file: src-ci/tasks/status.yaml
-      config:
-        run:
-          path: src-ci/scripts/set-status.sh
-          args: [test, success, 'make test']
-        params:
-          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+      put: status
+      params:
+        path: src
+        context: test
+        state: success
+        description: make test
     on_failure:
-      task: set-status-failed
-      file: src-ci/tasks/status.yaml
-      config:
-        run:
-          path: src-ci/scripts/set-status.sh
-          args: [test, failure, 'make test']
-        params:
-          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+      put: status
+      params:
+        path: src
+        context: test
+        state: failure
+        description: make test
 - name: dist
   plan:
   - aggregate:
@@ -106,34 +103,28 @@ jobs:
       trigger: true
     - get: src-ci
       trigger: true
-  - task: set-status-pending
-    file: src-ci/tasks/status.yaml
-    config:
-      run:
-        path: src-ci/scripts/set-status.sh
-        args: [dist, pending, 'packaging']
-      params:
-        GITHUB_ACCESS_TOKEN: {{github-access-token}}
+  - put: status
+    params:
+      path: src
+      context: dist
+      state: pending
+      description: packaging
   - task: dist
     file: src-ci/tasks/dist.yaml
     on_success:
-      task: set-status-success
-      file: src-ci/tasks/status.yaml
-      config:
-        run:
-          path: src-ci/scripts/set-status.sh
-          args: [dist, success, 'packaging']
-        params:
-          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+      put: status
+      params:
+        path: src
+        context: dist
+        state: success
+        description: packaging
     on_failure:
-      task: set-status-failed
-      file: src-ci/tasks/status.yaml
-      config:
-        run:
-          path: src-ci/scripts/set-status.sh
-          args: [dist, failure, 'packaging']
-        params:
-          GITHUB_ACCESS_TOKEN: {{github-access-token}}
+      put: status
+      params:
+        path: src
+        context: dist
+        state: failure
+        description: packaging
   - put: s3.hcf-ci-concourse-configgin
     params:
       from: 'dist/configgin-(.*)\.tgz'
