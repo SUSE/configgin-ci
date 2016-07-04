@@ -1,3 +1,31 @@
+resources:
+- name: src
+  type: pull-request
+  source:
+    access_token: {{github-access-token}}
+    branch: develop
+    private_key: {{git-private-key}}
+    uri: git@github.com:hpcloud/hcf-configgin.git
+- name: src-ci
+  type: git
+  source:
+    branch: develop
+    private_key: {{git-private-key}}
+    uri: git@github.com:hpcloud/hcf-configgin-ci.git
+- name: status
+  type: status
+  source:
+    access_token: {{github-access-token}}
+    repo: hpcloud/configgin
+- name: s3.hcf-ci-concourse-configgin
+  type: s3
+  source:
+    access_key_id: {{aws-access-key-id}}
+    bucket: concourse-hpe
+    private: true
+    regexp: configgin-(.*)\.tgz
+    region_name: us-west-2
+    secret_access_key: {{aws-secret-access-key}}
 resource_types:
 - name: pull-request
   type: docker-image
@@ -7,34 +35,6 @@ resource_types:
   type: docker-image
   source:
     repository: helioncf/concourse-github-status
-resources:
-- name: src
-  type: pull-request
-  source:
-    uri: git@github.com:hpcloud/hcf-configgin.git
-    branch: develop
-    access_token: {{github-access-token}}
-    private_key: {{git-private-key}}
-- name: src-ci
-  type: git
-  source:
-    uri: git@github.com:hpcloud/hcf-configgin-ci.git
-    branch: develop
-    private_key: {{git-private-key}}
-- name: status
-  type: status
-  source:
-    repo: hpcloud/configgin
-    access_token: {{github-access-token}}
-- name: s3.hcf-ci-concourse-configgin
-  type: s3
-  source:
-    region_name: us-west-2
-    access_key_id: {{aws-access-key-id}}
-    secret_access_key: {{aws-secret-access-key}}
-    bucket: concourse-hpe
-    regexp: 'configgin-(.*)\.tgz'
-    private: true
 jobs:
 - name: lint
   plan:
@@ -45,26 +45,26 @@ jobs:
       trigger: true
   - put: status
     params:
-      path: src
       context: lint
-      state: pending
       description: make lint
+      path: src
+      state: pending
   - task: lint
     file: src-ci/tasks/lint.yaml
-    on_success:
-      put: status
-      params:
-        path: src
-        context: lint
-        state: success
-        description: make lint
     on_failure:
       put: status
       params:
-        path: src
         context: lint
-        state: failure
         description: make lint
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: lint
+        description: make lint
+        path: src
+        state: success
 - name: test
   plan:
   - aggregate:
@@ -74,26 +74,26 @@ jobs:
       trigger: true
   - put: status
     params:
-      path: src
       context: test
-      state: pending
       description: make test
+      path: src
+      state: pending
   - task: test
     file: src-ci/tasks/test.yaml
-    on_success:
-      put: status
-      params:
-        path: src
-        context: test
-        state: success
-        description: make test
     on_failure:
       put: status
       params:
-        path: src
         context: test
-        state: failure
         description: make test
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: test
+        description: make test
+        path: src
+        state: success
 - name: dist
   plan:
   - aggregate:
@@ -105,26 +105,26 @@ jobs:
       trigger: true
   - put: status
     params:
-      path: src
       context: dist
-      state: pending
       description: packaging
+      path: src
+      state: pending
   - task: dist
     file: src-ci/tasks/dist.yaml
-    on_success:
-      put: status
-      params:
-        path: src
-        context: dist
-        state: success
-        description: packaging
     on_failure:
       put: status
       params:
-        path: src
         context: dist
-        state: failure
         description: packaging
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: dist
+        description: packaging
+        path: src
+        state: success
   - put: s3.hcf-ci-concourse-configgin
     params:
-      from: 'dist/configgin-(.*)\.tgz'
+      from: dist/configgin-(.*)\.tgz
