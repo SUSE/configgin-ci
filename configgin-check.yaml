@@ -30,11 +30,11 @@ resource_types:
 - name: pull-request
   type: docker-image
   source:
-    repository: helioncf/concourse-github-pull-request
+    repository: heliondevops/concourse-github-pull-request
 - name: status
   type: docker-image
   source:
-    repository: helioncf/concourse-github-status
+    repository: heliondevops/concourse-github-status
 jobs:
 - name: lint
   plan:
