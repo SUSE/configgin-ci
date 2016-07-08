@@ -5,13 +5,13 @@ resources:
     access_token: {{github-access-token}}
     branch: develop
     private_key: {{git-private-key}}
-    uri: git@github.com:hpcloud/hcf-configgin.git
+    uri: git@github.com:hpcloud/configgin.git
 - name: src-ci
   type: git
   source:
     branch: develop
     private_key: {{git-private-key}}
-    uri: git@github.com:hpcloud/hcf-configgin-ci.git
+    uri: git@github.com:hpcloud/configgin-ci.git
 - name: status
   type: status
   source:
