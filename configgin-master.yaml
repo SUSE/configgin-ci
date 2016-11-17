@@ -9,7 +9,7 @@ resources:
   type: git
   source:
     uri: git@github.com:hpcloud/hcf-configgin-ci.git
-    branch: develop
+    branch: master
     private_key: {{git-private-key}}
 - name: s3.hcf-ci-concourse-configgin
   type: s3
