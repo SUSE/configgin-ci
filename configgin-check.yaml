@@ -23,7 +23,7 @@ resources:
     access_key_id: {{aws-access-key-id}}
     bucket: concourse-hpe
     private: true
-    regexp: 'checks/configgin-(.*)\.tgz'
+    regexp: checks/configgin-(.*)\.tgz
     region_name: us-west-2
     secret_access_key: {{aws-secret-access-key}}
 resource_types:
