@@ -23,7 +23,7 @@ resources:
     access_key_id: {{aws-access-key-id}}
     bucket: concourse-hpe
     private: true
-    regexp: configgin-(.*)\.tgz
+    regexp: checks/configgin-(.*)\.tgz
     region_name: us-west-2
     secret_access_key: {{aws-secret-access-key}}
 resource_types:
@@ -127,4 +127,4 @@ jobs:
         state: success
   - put: s3.hcf-ci-concourse-configgin
     params:
-      from: dist/configgin-(.*)\.tgz
+      file: dist/configgin-*.tgz
