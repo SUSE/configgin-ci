@@ -5,11 +5,10 @@ image_resource:
   source:
     repository: ruby
     tag: '2.1.5'
+
 inputs:
-  - name: src
+- name: src
+
 run:
   path: make
-  args:
-    - -C
-    - src
-    - lint
+  args: [ -C src lint ]

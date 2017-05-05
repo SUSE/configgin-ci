@@ -1,15 +1,14 @@
 ---
 platform: linux
 image_resource:
- type: docker-image
- source:
-  repository: ruby
-  tag: '2.1.5'
+  type: docker-image
+  source:
+    repository: ruby
+    tag: '2.1.5'
+
 inputs:
-  - name: src
+- name: src
+
 run:
   path: make
-  args:
-    - -C
-    - src
-    - test
+  args: [ -C src test ]

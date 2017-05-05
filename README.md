@@ -1,6 +1,6 @@
-# hcf-configgin-ci
+# configgin-ci
 
-The concourse build pipeline for the [hcf-configgin](https://github.com/hpcloud/hcf-configgin) repo.
+The concourse build pipeline for the [configgin](https://github.com/hpcloud/configgin) repo.
 
 Exposes the make targets:
 - lint
