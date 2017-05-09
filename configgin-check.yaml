@@ -3,45 +3,49 @@ resources:
   type: pull-request
   source:
     access_token: {{github-access-token}}
+    uri: git@github.com:SUSE/configgin.git
     branch: master
-    private_key: {{git-private-key}}
-    uri: git@github.com:hpcloud/configgin.git
-- name: src-ci
+    private_key: {{github-private-key}}
+
+- name: ci
   type: git
   source:
     branch: master
-    private_key: {{git-private-key}}
-    uri: git@github.com:hpcloud/configgin-ci.git
+    uri: https://github.com/SUSE/configgin-ci.git
+
 - name: status
   type: status
   source:
     access_token: {{github-access-token}}
-    repo: hpcloud/configgin
-- name: s3.hcf-ci-concourse-configgin
+    repo: SUSE/configgin
+
+- name: out
   type: s3
   source:
-    access_key_id: {{aws-access-key-id}}
-    bucket: concourse-hpe
-    private: true
+    access_key_id: {{s3-access-key}}
+    endpoint: {{s3-endpoint}}
+    bucket: configgin
     regexp: checks/configgin-(.*)\.tgz
-    region_name: us-west-2
-    secret_access_key: {{aws-secret-access-key}}
+    secret_access_key: {{s3-secret-key}}
+
 resource_types:
 - name: pull-request
   type: docker-image
   source:
     repository: heliondevops/concourse-github-pull-request
+
 - name: status
   type: docker-image
   source:
     repository: heliondevops/concourse-github-status
+
 jobs:
 - name: lint
   plan:
   - aggregate:
     - get: src
       trigger: true
-    - get: src-ci
+    - get: ci
       trigger: true
   - put: status
     params:
@@ -50,7 +54,7 @@ jobs:
       path: src
       state: pending
   - task: lint
-    file: src-ci/tasks/lint.yaml
+    file: ci/tasks/lint.yaml
     on_failure:
       put: status
       params:
@@ -65,12 +69,13 @@ jobs:
         description: make lint
         path: src
         state: success
+
 - name: test
   plan:
   - aggregate:
     - get: src
       trigger: true
-    - get: src-ci
+    - get: ci
       trigger: true
   - put: status
     params:
@@ -79,7 +84,7 @@ jobs:
       path: src
       state: pending
   - task: test
-    file: src-ci/tasks/test.yaml
+    file: ci/tasks/test.yaml
     on_failure:
       put: status
       params:
@@ -94,6 +99,7 @@ jobs:
         description: make test
         path: src
         state: success
+
 - name: dist
   plan:
   - aggregate:
@@ -101,7 +107,7 @@ jobs:
     # dependency as well as we want all the statuses to be set in parallel.
     - get: src
       trigger: true
-    - get: src-ci
+    - get: ci
       trigger: true
   - put: status
     params:
@@ -110,7 +116,7 @@ jobs:
       path: src
       state: pending
   - task: dist
-    file: src-ci/tasks/dist.yaml
+    file: ci/tasks/dist.yaml
     on_failure:
       put: status
       params:
@@ -125,6 +131,7 @@ jobs:
         description: packaging
         path: src
         state: success
-  - put: s3.hcf-ci-concourse-configgin
+  - put: out
     params:
       file: dist/configgin-*.tgz
+      acl: public-read

@@ -1,19 +1,17 @@
 ---
 platform: linux
 image_resource:
- type: docker-image
- source:
-  repository: ruby
-  tag: '2.1.5'
+  type: docker-image
+  source:
+    repository: ruby
+    tag: '2.1.5'
 
 inputs:
-  - name: src
+- name: src
 
 outputs:
-  - name: dist
+- name: out
 
 run:
   path: sh
-  args:
-    - -c
-    - make -C src dist && mv src/output/* dist/
+  args: [ -c, "make -C src dist && mv src/output/* out/" ]

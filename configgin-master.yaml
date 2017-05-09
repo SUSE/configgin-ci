@@ -2,55 +2,58 @@ resources:
 - name: src
   type: git
   source:
-    uri: git@github.com:hpcloud/hcf-configgin.git
+    uri: https://github.com/SUSE/configgin.git
     branch: master
-    private_key: {{git-private-key}}
-- name: src-ci
+
+- name: ci
   type: git
   source:
-    uri: git@github.com:hpcloud/hcf-configgin-ci.git
+    uri: https://github.com/SUSE/configgin-ci.git
     branch: master
-    private_key: {{git-private-key}}
-- name: s3.hcf-ci-concourse-configgin
+
+- name: out
   type: s3
   source:
-    region_name: us-west-2
-    access_key_id: {{aws-access-key-id}}
-    secret_access_key: {{aws-secret-access-key}}
-    bucket: concourse-hpe
+    access_key_id: {{s3-access-key}}
+    secret_access_key: {{s3-secret-key}}
+    endpoint: {{s3-endpoint}}
+    bucket: configgin
     regexp: configgin-(.*).tgz
     private: true
+
 jobs:
 - name: lint
   plan:
   - aggregate:
-    - get: src-ci
+    - get: ci
       trigger: true
     - get: src
       trigger: true
   - task: lint
-    file: src-ci/tasks/lint.yaml
+    file: ci/tasks/lint.yaml
+
 - name: test
   plan:
   - aggregate:
     - get: src
       trigger: true
-    - get: src-ci
+    - get: ci
       trigger: true
   - task: test
-    file: src-ci/tasks/test.yaml
+    file: ci/tasks/test.yaml
+
 - name: dist
   plan:
   - aggregate:
     - get: src
       passed: [lint, test]
       trigger: true
-    - get: src-ci
+    - get: ci
       passed: [lint, test]
       trigger: true
   - task: dist
-    file: src-ci/tasks/dist.yaml
-  - put: s3.hcf-ci-concourse-configgin
+    file: ci/tasks/dist.yaml
+  - put: out
     params:
-      file: dist/configgin-*.tgz
+      file: out/configgin-*.tgz
       acl: public-read
