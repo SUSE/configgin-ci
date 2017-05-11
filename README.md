@@ -7,11 +7,12 @@ Exposes the make targets:
 - test
 - dist
 
-To set-pipeline, you must supply your own secrets.yaml.
-You can simply `cp secrets.yaml.example secrets.yaml` and fill in the blanks.
+To set-pipeline, you must supply your own secrets.yaml. For deployment to production
+you can use the credentials under blackbox control in the `SUSE/cloudfoundry` repo.
 
 Then (assuming your instance is called "lol") do a set-pipeline like this:
 
 ```bash
-fly -t lol set-pipeline -p configgin-master -c configgin-master.yaml -l secrets.yaml
+fly -t lol set-pipeline -p configgin-master -c configgin-master.yaml \
+    -l <(gpg -d --no-tty $HOME/hpcloud/cloudfoundry/secure/concourse-secrets.yml.gpg 2> /dev/null)
 ```
