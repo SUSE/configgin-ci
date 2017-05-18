@@ -54,7 +54,7 @@ jobs:
       path: src
       state: pending
   - task: lint
-    file: ci/tasks/lint.yaml
+    file: ci/tasks/lint.yml
     on_failure:
       put: status
       params:
@@ -84,7 +84,7 @@ jobs:
       path: src
       state: pending
   - task: test
-    file: ci/tasks/test.yaml
+    file: ci/tasks/test.yml
     on_failure:
       put: status
       params:
@@ -116,7 +116,7 @@ jobs:
       path: src
       state: pending
   - task: dist
-    file: ci/tasks/dist.yaml
+    file: ci/tasks/dist.yml
     on_failure:
       put: status
       params:

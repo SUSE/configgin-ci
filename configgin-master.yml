@@ -30,7 +30,7 @@ jobs:
     - get: src
       trigger: true
   - task: lint
-    file: ci/tasks/lint.yaml
+    file: ci/tasks/lint.yml
 
 - name: test
   plan:
@@ -40,7 +40,7 @@ jobs:
     - get: ci
       trigger: true
   - task: test
-    file: ci/tasks/test.yaml
+    file: ci/tasks/test.yml
 
 - name: dist
   plan:
@@ -52,7 +52,7 @@ jobs:
       passed: [lint, test]
       trigger: true
   - task: dist
-    file: ci/tasks/dist.yaml
+    file: ci/tasks/dist.yml
   - put: out
     params:
       file: out/configgin-*.tgz
