@@ -11,7 +11,7 @@ resources:
     uri: https://github.com/SUSE/configgin-ci.git
     branch: master
 
-- name: out
+- name: s3.configgin
   type: s3
   source:
     access_key_id: {{s3-access-key}}
@@ -53,7 +53,7 @@ jobs:
       trigger: true
   - task: dist
     file: ci/tasks/dist.yml
-  - put: out
+  - put: s3.configgin
     params:
       file: out/configgin-*.tgz
       acl: public-read
