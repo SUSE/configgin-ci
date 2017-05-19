@@ -4,14 +4,14 @@ image_resource:
   type: docker-image
   source:
     repository: ruby
-    tag: '2.1.5'
+    tag: '2.4.1'
 
 inputs:
 - name: src
 
 outputs:
-- name: out
+- name: s3.configgin
 
 run:
   path: sh
-  args: [ -c, "make -C src dist && mv src/output/* out/" ]
+  args: [ -c, "make -C src dist && mv src/output/* s3.configgin/" ]

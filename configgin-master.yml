@@ -55,5 +55,5 @@ jobs:
     file: ci/tasks/dist.yml
   - put: s3.configgin
     params:
-      file: out/configgin-*.tgz
+      file: s3.configgin/configgin-*.tgz
       acl: public-read

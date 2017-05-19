@@ -19,7 +19,7 @@ resources:
     access_token: {{github-access-token}}
     repo: SUSE/configgin
 
-- name: out
+- name: s3.configgin
   type: s3
   source:
     access_key_id: {{s3-access-key}}
@@ -131,7 +131,7 @@ jobs:
         description: packaging
         path: src
         state: success
-  - put: out
+  - put: s3.configgin
     params:
-      file: dist/configgin-*.tgz
+      file: s3.configgin/configgin-*.tgz
       acl: public-read
