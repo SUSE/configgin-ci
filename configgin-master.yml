@@ -18,7 +18,7 @@ resources:
     secret_access_key: {{s3-secret-key}}
     endpoint: {{s3-endpoint}}
     bucket: configgin
-    regexp: configgin-(.*).tgz
+    regexp: configgin-(.*).gem
     private: true
 
 jobs:
@@ -55,5 +55,5 @@ jobs:
     file: ci/tasks/dist.yml
   - put: s3.configgin
     params:
-      file: s3.configgin/configgin-*.tgz
+      file: s3.configgin/configgin-*.gem
       acl: public-read

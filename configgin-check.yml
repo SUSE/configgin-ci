@@ -25,7 +25,7 @@ resources:
     access_key_id: {{s3-access-key}}
     endpoint: {{s3-endpoint}}
     bucket: configgin
-    regexp: checks/configgin-(.*)\.tgz
+    regexp: checks/configgin-(.*)\.gem
     secret_access_key: {{s3-secret-key}}
 
 resource_types:
@@ -133,5 +133,5 @@ jobs:
         state: success
   - put: s3.configgin
     params:
-      file: s3.configgin/configgin-*.tgz
+      file: s3.configgin/configgin-*.gem
       acl: public-read

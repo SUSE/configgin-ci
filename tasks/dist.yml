@@ -14,4 +14,4 @@ outputs:
 
 run:
   path: sh
-  args: [ -c, "make -C src dist && mv src/output/* s3.configgin/" ]
+  args: [ -c, "make -C src dist && mv configgin-*.gem s3.configgin/" ]
