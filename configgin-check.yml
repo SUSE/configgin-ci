@@ -1,3 +1,4 @@
+---
 resources:
 - name: src
   type: pull-request
@@ -22,11 +23,11 @@ resources:
 - name: s3.configgin
   type: s3
   source:
-    access_key_id: {{s3-access-key}}
-    endpoint: {{s3-endpoint}}
+    access_key_id: {{aws-access-key}}
     bucket: configgin
     regexp: checks/configgin-(.*)\.gem
-    secret_access_key: {{s3-secret-key}}
+    secret_access_key: {{aws-secret-key}}
+    private: true
 
 resource_types:
 - name: pull-request
