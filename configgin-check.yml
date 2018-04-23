@@ -46,6 +46,7 @@ jobs:
   plan:
   - aggregate:
     - get: src
+      version: every
       trigger: true
     - get: ci
       trigger: true
@@ -76,6 +77,7 @@ jobs:
   plan:
   - aggregate:
     - get: src
+      version: every
       trigger: true
     - get: ci
       trigger: true
@@ -108,6 +110,7 @@ jobs:
     # Don't use the passed: attribute from the normal pipeline, there is no true
     # dependency as well as we want all the statuses to be set in parallel.
     - get: src
+      version: every
       trigger: true
     - get: ci
       trigger: true
