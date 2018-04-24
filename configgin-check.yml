@@ -4,7 +4,7 @@ resources:
   type: pull-request
   source:
     access_token: {{github-access-token}}
-    uri: git@github.com:SUSE/configgin.git
+    repo: SUSE/configgin
     base: master
     private_key: {{github-private-key}}
     disable_forks: true
