@@ -3,10 +3,10 @@ resources:
 - name: src
   type: pull-request
   source:
-    access_token: {{github-access-token}}
+    access_token: ((github-access-token))
     repo: SUSE/configgin
     base: master
-    private_key: {{github-private-key}}
+    private_key: ((github-private-key))
     disable_forks: true
 
 - name: ci
@@ -18,16 +18,16 @@ resources:
 - name: status
   type: status
   source:
-    access_token: {{github-access-token}}
+    access_token: ((github-access-token))
     repo: SUSE/configgin
 
 - name: s3.configgin
   type: s3
   source:
-    access_key_id: {{aws-access-key}}
+    access_key_id: ((aws-access-key))
     bucket: configgin
     regexp: checks/configgin-(.*)\.gem
-    secret_access_key: {{aws-secret-key}}
+    secret_access_key: ((aws-secret-key))
     private: true
 
 resource_types:

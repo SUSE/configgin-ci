@@ -7,11 +7,10 @@ Exposes the make targets:
 - test
 - dist
 
-To set-pipeline, you must supply your own secrets.yaml.
-You can simply `cp secrets.yaml.example secrets.yaml` and fill in the blanks.
+To deploy the pipeline, run the `deploy` script.
 
-Then (assuming your instance is called "lol") do a set-pipeline like this:
+For example, to deploy to the concourse target named "lol", run:
 
 ```bash
-fly -t lol set-pipeline -p configgin-master -c configgin-master.yaml -l secrets.yaml
+./deploy -t lol master
 ```
