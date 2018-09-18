@@ -39,7 +39,8 @@ resource_types:
 - name: status
   type: docker-image
   source:
-    repository: splatform/concourse-github-status
+    repository: resource/github-status
+    tag: release
 
 jobs:
 - name: lint
