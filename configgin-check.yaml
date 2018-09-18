@@ -4,7 +4,7 @@ resources:
   type: pull-request
   source:
     access_token: ((github-access-token))
-    repo: SUSE/configgin
+    repo: ((src-pr-repo))
     base: master
     private_key: ((github-private-key))
     disable_forks: true
@@ -12,20 +12,20 @@ resources:
 - name: ci
   type: git
   source:
-    branch: master
-    uri: https://github.com/SUSE/configgin-ci.git
+    branch: ((ci-branch))
+    uri: ((ci-repo))
 
 - name: status
   type: status
   source:
     access_token: ((github-access-token))
-    repo: SUSE/configgin
+    repo: ((src-pr-repo))
 
 - name: s3.configgin
   type: s3
   source:
     access_key_id: ((aws-access-key))
-    bucket: configgin
+    bucket: ((s3-bucket))
     regexp: checks/configgin-(.*)\.gem
     secret_access_key: ((aws-secret-key))
     private: true

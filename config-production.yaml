@@ -1,0 +1,5 @@
+src-repo: https://github.com/cloudfoundry-incubator/configgin.git
+src-pr-repo: cloudfoundry-incubator/configgin
+ci-repo: https://github.com/SUSE/configgin-ci.git
+ci-branch: master
+s3-bucket: configgin

@@ -3,21 +3,21 @@ resources:
 - name: src
   type: git
   source:
-    uri: https://github.com/SUSE/configgin.git
+    uri: ((src-repo))
     branch: master
 
 - name: ci
   type: git
   source:
-    uri: https://github.com/SUSE/configgin-ci.git
-    branch: master
+    uri: ((ci-repo))
+    branch: ((ci-branch))
 
 - name: s3.configgin
   type: s3
   source:
     access_key_id: {{aws-access-key}}
     secret_access_key: {{aws-secret-key}}
-    bucket: configgin
+    bucket: ((s3-bucket))
     regexp: configgin-(.*).gem
     private: true
 
