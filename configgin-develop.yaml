@@ -4,7 +4,7 @@ resources:
   type: git
   source:
     uri: ((src-repo))
-    branch: master
+    branch: develop
 
 - name: ci
   type: git
@@ -18,7 +18,7 @@ resources:
     access_key_id: {{aws-access-key}}
     secret_access_key: {{aws-secret-key}}
     bucket: ((s3-bucket))
-    regexp: configgin-(.*).gem
+    regexp: develop/configgin-(.*).gem
     private: true
 
 jobs:
