@@ -1,0 +1,59 @@
+---
+resources:
+- name: src
+  type: git
+  source:
+    uri: ((src-repo))
+    branch: master
+
+- name: ci
+  type: git
+  source:
+    uri: ((ci-repo))
+    branch: ((ci-branch))
+
+- name: s3.configgin
+  type: s3
+  source:
+    access_key_id: {{aws-access-key}}
+    secret_access_key: {{aws-secret-key}}
+    bucket: ((s3-bucket))
+    regexp: configgin-(.*).gem
+    private: true
+
+jobs:
+- name: lint
+  plan:
+  - aggregate:
+    - get: ci
+      trigger: true
+    - get: src
+      trigger: true
+  - task: lint
+    file: ci/tasks/lint.yml
+
+- name: test
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: ci
+      trigger: true
+  - task: test
+    file: ci/tasks/test.yml
+
+- name: dist
+  plan:
+  - aggregate:
+    - get: src
+      passed: [lint, test]
+      trigger: true
+    - get: ci
+      passed: [lint, test]
+      trigger: true
+  - task: dist
+    file: ci/tasks/dist.yml
+  - put: s3.configgin
+    params:
+      file: s3.configgin/configgin-*.gem
+      acl: public-read
