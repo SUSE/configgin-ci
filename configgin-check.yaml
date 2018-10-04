@@ -5,7 +5,7 @@ resources:
   source:
     access_token: ((github-access-token))
     repo: ((src-pr-repo))
-    base: master
+    base: develop
     private_key: ((github-private-key))
     disable_forks: true
 
